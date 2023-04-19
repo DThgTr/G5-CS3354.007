@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="frontend/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title> Library </title>
+</head>
+
+<body style="min-width: fit-content;">
+
+    <h1 style="text-align: center; border: 10px black;"> Add Book </h1>
+
+    <button type="button" class="btn btn-primary" style="display: block; margin: auto; margin-top: 3%;" onclick="location.href='/'"> Return to Home
+    </button>
+
+    <form style="width: 80%; margin: auto; margin-top: 5%;">
+        <div class="mb-3">
+            <label class="form-label"> Book Title: </label>
+            <input class="form-control" id="book-title">
+        </div>
+        <div class="mb-3">
+            <label class="form-label"> Author First Name: </label>
+            <input class="form-control" id="author-first-name">
+        </div>
+        <div class="mb-3">
+            <label class="form-label"> Author Last Name: </label>
+            <input class="form-control" id="author-last-name">
+        </div>
+        <button type="submit" class="btn btn-primary" onclick="addBook(event)"> Submit </button>
+    </form>
+
+    <div style="margin: auto; margin-top: 20px; width: 80%; color: green; text-align: center; display: none;"
+        id="success-message">
+        Book has been sucessfully added!
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        async function addBook(event) {
+            try {
+                event.preventDefault();
+
+                let bookTitle = document.getElementById("book-title").value;
+                let firstName = document.getElementById("author-first-name").value;
+                let lastName = document.getElementById("author-last-name").value;
+
+                const bookObject = {
+                    title: bookTitle,
+                    authorFirstName: firstName,
+                    authorLastName: lastName
+                }
+
+                await axios.post("/addbook", bookObject);
+                
+                document.getElementById("success-message").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("success-message").style.display = "none";
+                }, 3000);
+
+                document.getElementById("book-title").value = "";
+                document.getElementById("author-first-name").value = "";
+                document.getElementById("author-last-name").value = "";
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+    </script>
+</body>
+
+</html>
