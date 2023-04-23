@@ -2,14 +2,11 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="frontend/styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title> Library </title>
 </head>
@@ -18,37 +15,103 @@
 
     <h1 style="text-align: center; border: 10px black;"> Books </h1>
 
-    <button type="button" class="btn btn-primary" style="display: block; margin: auto; margin-top: 3%;" onclick="location.href='/addbook'"> Add Book
-    </button>
+    <div style="margin: auto; margin-top: 3%; display: flex; flex-wrap: wrap; justify-content: space-evenly;">
+        <button type="button" class="btn btn-primary" style="display: block;" onclick="location.href='/addbook'"> Add
+            Book
+        </button>
+
+        <button type="button" class="btn btn-primary" style="display: block;" onclick="location.href='/bookloans'"> View
+            Book Loans </button>
+    </div>
 
 
-    <table class="table" style="width: 80%; margin: auto; margin-top: 5%;">
+    <table class="table" style="width: 80%; margin: auto; margin-top: 5%; text-align: center;">
         <thead>
             <th scope="col"> ID </th>
             <th scope="col"> Title </th>
             <th scope="col"> Author </th>
-            <th scope="col"> Checkout </th>
+            <th scope="col"> Available? </th>
+            <th scope="col"> Check Out </th>
         </thead>
         <tbody class="display-books">
         </tbody>
     </table>
 
+    <div class="modal fade" id="select-user" tabindex="-1" aria-labelledby="select-user" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="select-user-modal-title"> Checkout Book </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6> Select the user who is checking out this book: </h6>
+                    <table class="table" style="width: 90%; margin: auto; margin-top: 3%; text-align: center;">
+                        <thead>
+                            <th scope="col"> User ID </th>
+                            <th scope="col"> Name </th>
+                            <th scope="col"> Email </th>
+                            <th scop="col"> Address </th>
+                            <th scope="col"> Select </th>
+                        </thead>
+                        <tbody class="display-users">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="success-message-modal" tabindex="-1" aria-labelledby="success-message-modal"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="select-user-modal-title"> Success! </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 style="color: green; text-align: center;"> Check-Out Details: </h6>
+                    <table class="table" style="width: 90%; margin: auto; margin-top: 3%; text-align: center;">
+                        <thead>
+                            <th scope="col"> Loan ID </th>
+                            <th scope="col"> Book Title </th>
+                            <th scope="col"> Borrower Name </th>
+                            <th scope="col"> Check-Out Date </th>
+                            <th scope="col"> Due Date </th>
+                        </thead>
+                        <tbody class="checkout-details">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
         integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+        let selectedBook = "";
+
+        function processDate(date) {
+            date = new Date(date);
+            date = date.toDateString();
+            return date.substring(4);
+        }
+
         async function getBooks() {
             try {
                 const { data } = await axios.get("/getbooks");
@@ -59,11 +122,17 @@
 
                 for (let i = 0; i < books.length; i++) {
                     let book = document.createElement("tr");
+                    let buttonComponent1 = `onclick="selectBook('${books[i]._id}')"`;
+                    let buttonComponent2 = `data-bs-toggle="modal"`;
+                    let buttonComponent3 = `data-bs-target="#select-user"`;
+                    let checkoutButton = `<button ${buttonComponent1} ${buttonComponent2} ${buttonComponent3}> Check Out </button>`;
+
                     book.innerHTML = `
                         <td> ${books[i]._id} </td>
                         <td> ${books[i].title} </td>
                         <td> ${books[i].authorFirstName} ${books[i].authorLastName} </td>
-                        <td> <button> Checkout </button> </td>
+                        <td> ${books[i].loans.length == 0 ? "Yes" : "No"} </td>
+                        <td> ${books[i].loans.length == 0 ? checkoutButton : "N/A"}</td>
                         `;
 
                     booksDisplay.appendChild(book);
@@ -75,6 +144,70 @@
         }
 
         getBooks();
+
+        async function populateUsers() {
+            try {
+                const { data } = await axios.get("/getusers");
+                const users = data.users;
+
+                let usersDisplay = document.querySelector(".display-users");
+                usersDisplay.innerHTML = "";
+
+                for (let i = 0; i < users.length; i++) {
+                    let user = document.createElement("tr");
+                    let buttonComponent1 = `onclick="selectUser('${users[i]._id}')"`;
+                    let buttonComponent2 = `data-bs-dismiss="modal"`;
+                    let buttonComponent3 = `data-bs-toggle="modal"`;
+                    let buttonComponent4 = `data-bs-target="#success-message-modal"`;
+                    let selectUserButton = `<button ${buttonComponent1} ${buttonComponent2} ${buttonComponent3} ${buttonComponent4}> Select </button>`;
+
+                    user.innerHTML = `
+                        <td> ${users[i]._id} </td>
+                        <td> ${users[i].firstName} ${users[i].lastName} </td>
+                        <td> ${users[i].email} </td>
+                        <td> ${users[i].address} </td>
+                        <td> ${selectUserButton} </td>
+                    `;
+
+                    usersDisplay.appendChild(user);
+                }
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+
+        populateUsers();
+
+        function selectBook(bookID) {
+            let title = document.querySelector("#select-user-modal-title");
+            title.innerHTML = `Checkout Book ${bookID}`;
+            selectedBook = bookID;
+        }
+
+        async function selectUser(userID) {
+            try {
+                const { data } = await axios.post("/checkout", { book: selectedBook, borrower: userID });
+                const newBookLoan = data.newBookLoan;
+
+                getBooks();
+
+                let checkoutDisplay = document.querySelector(".checkout-details");
+                checkoutDisplay.innerHTML = "";
+                checkoutDisplay.innerHTML = `
+                    <tr>
+                        <td> ${newBookLoan._id} </td>
+                        <td> ${newBookLoan.book.title} </td>
+                        <td> ${newBookLoan.borrower.firstName} ${newBookLoan.borrower.lastName} </td>
+                        <td> ${processDate(newBookLoan.checkedOutDate)} </td>
+                        <td> ${processDate(newBookLoan.dueDate)} </td>
+                    </tr>
+                `;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
     </script>
 </body>
 

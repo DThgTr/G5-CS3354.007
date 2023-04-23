@@ -23,7 +23,16 @@ app.get("/", async (req, res) => {
 
 app.get("/getbooks", async (req, res) => {
     try {
-        const books = await Book.find({});
+        const books = await Book.aggregate([
+            { $lookup:
+                {
+                    from: "borrowedbooks",
+                    localField: "_id",
+                    foreignField: "book",
+                    as: "loans"
+                }
+            }
+        ]);
         return res.status(200).json({ books });
     }
     catch (error) {
@@ -53,7 +62,7 @@ app.post("/addbook", async (req, res) => {
     }
 });
 
-app.get("/users", async (req, res) => {
+app.get("/getusers", async (req, res) => {
     try {
         const users = await User.find({});
         return res.status(200).json({ users });
@@ -75,27 +84,82 @@ app.post("/adduser", async (req, res) => {
     }
 });
 
-/*
 app.post("/checkout", async (req, res) => {
     try {
-        const { book, borrower } = req.body;
+        const book = req.body.book;
+        const validateBook = await BorrowedBook.find({ _id: book });
 
-        let borrowedBookObject = {
-            "book": book,
-            "borrower": borrower,
-            "checkedOutDate": 
-        } 
+        if (validateBook.length > 0) {
+            return res.status(400).json({ error: "Cannot checkout this book since it is already checked out"});
+        }
 
+        const borrower = req.body.borrower;
 
-        const newBorrowedBook = await BorrowedBook.create(req.body);
-        return res.status(500).json({ newBorrowedBook });
+        let today = new Date();
+        today = new Date(
+            today.toLocaleString('en-US', {
+                timeZone: 'America/Chicago'
+            })
+        );
+        
+        let twoWeeksFromToday = new Date();
+        twoWeeksFromToday = new Date(
+            twoWeeksFromToday.toLocaleString('en-US', {
+                timeZone: 'America/Chicago'
+            })
+        );
+        twoWeeksFromToday.setDate(twoWeeksFromToday.getDate() + 14);
+
+        const newLoanObject = {
+            book: book,
+            borrower: borrower,
+            checkedOutDate: today,
+            dueDate: twoWeeksFromToday
+        }
+
+        const createdLoan = await BorrowedBook.create(newLoanObject);
+        const newBookLoan = await BorrowedBook.findOne({ _id: createdLoan._id }).populate("book").populate("borrower");
+        
+        return res.status(201).json({ newBookLoan });
     }
     catch (error) {
         console.log(error);
         return res.status(500).json({ error });
     }
 });
-*/
+
+app.delete("/checkin/:id", async (req, res) => {
+    try {
+        const bookLoanID = req.params.id;
+        const checkedInBook = await BorrowedBook.findOneAndDelete({ _id: bookLoanID }).populate("book").populate("borrower");
+        return res.status(200).json({ checkedInBook });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(200).json({ error });
+    }
+});
+
+app.get("/bookloans", async (req, res) => {
+    try {
+        return res.sendFile(path.join(__dirname, "/frontend/bookloans.html"));
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ error });
+    }
+});
+
+app.get("/getbookloans", async (req, res) => {
+    try {
+        const bookLoans = await BorrowedBook.find({}).populate("book").populate("borrower");
+        return res.status(200).json({ bookLoans });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ error });
+    }
+});
 
 const port = process.env.PORT || 3000;
 
